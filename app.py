@@ -339,4 +339,4 @@ Navigate using the sidebar menu to get started.
 
 # Sidebar information
 with st.sidebar:
-    st.markdown("Use the navigation menu to explore different sections.")")
+    st.markdown("Use the navigation menu to explore different sections.")
