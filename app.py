@@ -100,7 +100,7 @@ st.markdown("""
     
     /* Sidebar styling - DSV dark blue */
     .css-1d391kg, .css-1oe6wy4, section[data-testid="stSidebar"] {
-        background-color: #1f4e79 !important;
+        background-color: #002664 !important;
     }
     
     /* Sidebar navigation text */
@@ -126,7 +126,7 @@ st.markdown("""
     
     /* DSV-style header with logo area */
     .main-header {
-        background-color: #1f4e79;
+        background-color: #002664;
         color: white;
         padding: 1rem 2rem;
         margin: -2rem -2rem 2rem -2rem;
@@ -139,7 +139,7 @@ st.markdown("""
     .stDataFrame thead tr th,
     .stDataFrame thead th,
     thead tr th {
-        background-color: #1f4e79 !important;
+        background-color: #002664 !important;
         color: white !important;
         font-weight: 600 !important;
         border: none !important;
@@ -179,7 +179,7 @@ st.markdown("""
     
     /* Button styling - DSV blue */
     .stButton > button {
-        background-color: #1f4e79;
+        background-color: #002664;
         color: white;
         border: none;
         border-radius: 6px;
@@ -190,21 +190,21 @@ st.markdown("""
     }
     
     .stButton > button:hover {
-        background-color: #163a5f;
+        background-color: #001a4d;
         color: white;
-        box-shadow: 0 2px 8px rgba(31, 78, 121, 0.3);
+        box-shadow: 0 2px 8px rgba(0, 38, 100, 0.3);
     }
     
     /* Header styling */
     h1 {
-        color: #1f4e79 !important;
+        color: #002664 !important;
         font-weight: 600 !important;
         font-size: 2.5rem !important;
         margin-bottom: 1rem !important;
     }
     
     h2 {
-        color: #1f4e79 !important;
+        color: #002664 !important;
         font-weight: 500 !important;
         font-size: 1.8rem !important;
         margin-top: 2rem !important;
@@ -212,7 +212,7 @@ st.markdown("""
     }
     
     h3 {
-        color: #1f4e79 !important;
+        color: #002664 !important;
         font-weight: 500 !important;
         font-size: 1.4rem !important;
         margin-top: 1.5rem !important;
@@ -221,7 +221,7 @@ st.markdown("""
     
     /* Navigation menu styling */
     .css-1vq4p4l, .css-12w0qpk {
-        background-color: #1f4e79 !important;
+        background-color: #002664 !important;
     }
     
     /* Selected page indicator */
@@ -240,7 +240,7 @@ st.markdown("""
     /* Success/info/warning messages */
     .stAlert {
         border-radius: 6px;
-        border-left: 4px solid #1f4e79;
+        border-left: 4px solid #002664;
     }
     
     /* Form styling */
@@ -273,7 +273,7 @@ st.markdown("""
 st.markdown("""
 <div class="main-header">
     <div style="display: flex; align-items: center;">
-        <div style="background: white; color: #1f4e79; padding: 0.5rem 1rem; border-radius: 4px; font-weight: bold; margin-right: 1rem;">
+        <div style="background: white; color: #002664; padding: 0.5rem 1rem; border-radius: 4px; font-weight: bold; margin-right: 1rem;">
             DSV
         </div>
         <h1 style="color: white; margin: 0; font-size: 1.8rem;">EV Truck Performance Tracker</h1>
