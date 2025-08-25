@@ -1,0 +1,4 @@
+date,customer,from_location,to_location,tons_loaded,truck_type,plate_number,distance_km
+2024-01-15,Example Customer Inc,Warehouse Central,Customer Site A,15.5,Electric,ABC123,45.2
+2024-01-15,Green Logistics Ltd,Distribution Center,Retail Store B,8.3,Electric,DEF456,28.7
+2024-01-16,Eco Transport Co,Manufacturing Plant,Customer Depot,22.1,Electric,GHI789,67.4
