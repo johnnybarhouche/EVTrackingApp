@@ -9,6 +9,10 @@ st.set_page_config(page_title="Dashboard", page_icon="📊", layout="wide")
 
 st.title("📊 Dashboard")
 
+# Initialize session state if needed
+if 'trips_data' not in st.session_state:
+    st.session_state.trips_data = pd.DataFrame()
+
 # Check if data exists
 if st.session_state.trips_data.empty:
     st.warning("No trip data available. Please import data from the Data & Import section.")
@@ -112,17 +116,17 @@ if not st.session_state.energy_consumption.empty:
     consumption_summary = st.session_state.energy_consumption.groupby('plate_number').agg({
         'kwh_per_km': 'mean'
     }).round(3)
-    
+
     # Merge with trip data to get total km and calculate total kWh
     if not filtered_data.empty:
         trip_summary = filtered_data.groupby('plate_number').agg({
             'distance_km': 'sum'
         })
-        
+
         consumption_display = consumption_summary.join(trip_summary, how='outer').fillna(0)
         consumption_display['total_kwh'] = consumption_display['kwh_per_km'] * consumption_display['distance_km']
         consumption_display['co2_emissions'] = consumption_display['total_kwh'] * st.session_state.emission_factor
-        
+
         consumption_display.columns = ['kWh/km', 'Total km', 'Total kWh', 'CO2 Emissions (kg)']
         st.dataframe(consumption_display, use_container_width=True)
     else:
@@ -144,17 +148,17 @@ else:
 if not filtered_data.empty:
     st.subheader("Performance Summary")
     col1, col2, col3 = st.columns(3)
-    
+
     with col1:
         if 'distance_km' in filtered_data.columns and 'tons_loaded' in filtered_data.columns:
             total_tkm = (filtered_data['distance_km'] * filtered_data['tons_loaded']).sum()
             st.metric("Total Ton-Kilometers", f"{total_tkm:,.0f} tkm")
-    
+
     with col2:
         if not st.session_state.energy_consumption.empty:
             avg_efficiency = st.session_state.energy_consumption['kwh_per_km'].mean()
             st.metric("Average Efficiency", f"{avg_efficiency:.2f} kWh/km")
-    
+
     with col3:
         if not st.session_state.energy_consumption.empty and 'distance_km' in filtered_data.columns:
             total_energy = 0
@@ -165,6 +169,6 @@ if not filtered_data.empty:
                 ]['kwh_per_km'].mean()
                 if not pd.isna(truck_efficiency):
                     total_energy += truck_km * truck_efficiency
-            
+
             total_emissions = total_energy * st.session_state.emission_factor
             st.metric("Total CO2 Emissions", f"{total_emissions:,.0f} kg")

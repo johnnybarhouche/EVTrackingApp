@@ -18,6 +18,10 @@ st.markdown("""
 
 st.title("🛣️ Route Management")
 
+# Initialize session state if needed
+if 'routes_data' not in st.session_state:
+    st.session_state.routes_data = pd.DataFrame()
+
 st.subheader("Manage Routes and Distances")
 
 # Display current routes

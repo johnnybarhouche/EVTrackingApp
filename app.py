@@ -98,46 +98,72 @@ st.markdown("""
         font-family: 'Roboto', sans-serif;
     }
     
-    /* Sidebar styling - DSV dark blue with white text background */
+    /* Sidebar styling - white background, smaller width */
     .css-1d391kg, .css-1oe6wy4, section[data-testid="stSidebar"] {
-        background-color: #002664 !important;
-        width: 200px !important;
-        min-width: 200px !important;
-        max-width: 200px !important;
+        background-color: white !important;
+        width: 180px !important;
+        min-width: 180px !important;
+        max-width: 180px !important;
+        border-right: 1px solid #e0e0e0 !important;
     }
     
-    /* Sidebar navigation text with white background */
+    /* Sidebar content styling */
     .css-1d391kg .css-10trblm, 
     .css-1oe6wy4 .css-10trblm,
     section[data-testid="stSidebar"] .css-10trblm,
     section[data-testid="stSidebar"] p,
     section[data-testid="stSidebar"] .element-container {
-        color: #002664 !important;
+        color: #333333 !important;
         background-color: white !important;
-        padding: 8px !important;
-        border-radius: 4px !important;
-        margin: 4px 8px !important;
+        padding: 4px !important;
+        margin: 2px !important;
     }
     
-    /* Navigation links in sidebar */
+    /* Navigation links in sidebar - default state */
     .css-1d391kg a, .css-1oe6wy4 a,
     section[data-testid="stSidebar"] a {
-        color: #002664 !important;
+        color: #333333 !important;
         background-color: white !important;
         text-decoration: none !important;
         padding: 8px 12px !important;
         border-radius: 4px !important;
-        margin: 2px 8px !important;
+        margin: 2px 4px !important;
+        display: block !important;
+        transition: background-color 0.2s ease !important;
+    }
+    
+    /* Navigation links hover state */
+    .css-1d391kg a:hover, .css-1oe6wy4 a:hover,
+    section[data-testid="stSidebar"] a:hover {
+        background-color: #f0f0f0 !important;
+    }
+    
+    /* Page navigation - selected/active state */
+    .css-1vq4p4l li a,
+    .css-12w0qpk li a {
+        color: #333333 !important;
+        background-color: white !important;
+        border-radius: 4px !important;
+        margin: 2px 4px !important;
+        padding: 8px 12px !important;
         display: block !important;
     }
     
-    /* Page navigation */
-    .css-1vq4p4l li a,
-    .css-12w0qpk li a {
-        color: #002664 !important;
-        background-color: white !important;
+    /* Selected page styling */
+    .css-1vq4p4l .css-1rs6os,
+    .css-12w0qpk .css-1rs6os,
+    section[data-testid="stSidebar"] .css-1rs6os {
+        background-color: #002664 !important;
+        color: white !important;
         border-radius: 4px !important;
-        margin: 2px 8px !important;
+    }
+    
+    /* Selected page link text */
+    .css-1vq4p4l .css-1rs6os a,
+    .css-12w0qpk .css-1rs6os a,
+    section[data-testid="stSidebar"] .css-1rs6os a {
+        color: white !important;
+        background-color: #002664 !important;
     }
     
     /* Main content area */

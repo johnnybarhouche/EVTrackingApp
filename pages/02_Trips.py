@@ -17,18 +17,20 @@ st.markdown("""
 
 st.title("🚛 Trips Management")
 
-# Display current trips data
-st.subheader("Trip Data")
+# Initialize session state if needed
+if 'trips_data' not in st.session_state:
+    st.session_state.trips_data = pd.DataFrame()
 
+# Check if we have data
 if st.session_state.trips_data.empty:
     st.info("No trip data available. Import data from the Data & Import section.")
 else:
     # Search and filter options
     col1, col2, col3 = st.columns(3)
-    
+
     with col1:
         search_term = st.text_input("Search trips (customer, plate, location)")
-    
+
     with col2:
         if 'plate_number' in st.session_state.trips_data.columns:
             plate_filter = st.selectbox(
@@ -37,7 +39,7 @@ else:
             )
         else:
             plate_filter = 'All'
-    
+
     with col3:
         if 'customer' in st.session_state.trips_data.columns:
             customer_filter = st.selectbox(
@@ -46,10 +48,10 @@ else:
             )
         else:
             customer_filter = 'All'
-    
+
     # Apply filters
     filtered_trips = st.session_state.trips_data.copy()
-    
+
     if search_term:
         search_columns = ['customer', 'plate_number', 'from_location', 'to_location']
         available_search_columns = [col for col in search_columns if col in filtered_trips.columns]
@@ -58,32 +60,32 @@ else:
                 lambda x: x.str.contains(search_term, case=False, na=False)
             ).any(axis=1)
             filtered_trips = filtered_trips[mask]
-    
+
     if plate_filter != 'All':
         filtered_trips = filtered_trips[filtered_trips['plate_number'] == plate_filter]
-    
+
     if customer_filter != 'All':
         filtered_trips = filtered_trips[filtered_trips['customer'] == customer_filter]
-    
+
     # Display filtered data
     st.dataframe(filtered_trips, use_container_width=True, height=400)
-    
+
     # Trip statistics
     st.subheader("Trip Statistics")
-    
+
     col1, col2, col3, col4 = st.columns(4)
-    
+
     with col1:
         total_trips = len(filtered_trips)
         st.metric("Total Trips", total_trips)
-    
+
     with col2:
         if 'distance_km' in filtered_trips.columns:
             total_distance = filtered_trips['distance_km'].sum()
             st.metric("Total Distance", f"{total_distance:,.0f} km")
         else:
             st.metric("Total Distance", "N/A")
-    
+
     with col3:
         if 'tons_loaded' in filtered_trips.columns:
             # Convert to numeric and handle any string values
@@ -92,14 +94,14 @@ else:
             st.metric("Total Cargo", f"{total_cargo:,.0f} tons")
         else:
             st.metric("Total Cargo", "N/A")
-    
+
     with col4:
         unique_customers = filtered_trips['customer'].nunique() if 'customer' in filtered_trips.columns else 0
         st.metric("Unique Customers", unique_customers)
-    
+
     # Charts
     col1, col2 = st.columns(2)
-    
+
     with col1:
         st.subheader("Trips by Customer")
         if 'customer' in filtered_trips.columns and not filtered_trips.empty:
@@ -112,7 +114,7 @@ else:
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.info("No customer data available")
-    
+
     with col2:
         st.subheader("Daily Trip Volume")
         if 'date' in filtered_trips.columns and not filtered_trips.empty:
@@ -141,7 +143,7 @@ if not st.session_state.trips_data.empty and 'date' in st.session_state.trips_da
         st.session_state.trips_data['date'] = pd.to_datetime(st.session_state.trips_data['date'])
         min_date = st.session_state.trips_data['date'].min().date()
         max_date = st.session_state.trips_data['date'].max().date()
-        
+
         col1, col2 = st.columns(2)
         with col1:
             start_date = st.date_input(
@@ -163,7 +165,7 @@ if not st.session_state.trips_data.empty and 'date' in st.session_state.trips_da
 # Filter and display trips data
 if not st.session_state.trips_data.empty:
     filtered_trips = st.session_state.trips_data.copy()
-    
+
     # Apply date filter if available
     if start_date and end_date and 'date' in filtered_trips.columns:
         try:
@@ -174,12 +176,12 @@ if not st.session_state.trips_data.empty:
             ]
         except:
             pass
-    
+
     # Display filtered data
     st.subheader("Trip Records")
     if not filtered_trips.empty:
         st.dataframe(filtered_trips, use_container_width=True)
-        
+
         # Export filtered data
         st.subheader("Export Data")
         csv = filtered_trips.to_csv(index=False)
