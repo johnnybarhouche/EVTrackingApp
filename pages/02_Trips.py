@@ -156,7 +156,7 @@ with st.expander("Manual Trip Entry"):
             st.rerun()
 
 # Export filtered data
-if not filtered_trips.empty:
+if not st.session_state.trips_data.empty and 'filtered_trips' in locals() and not filtered_trips.empty:
     st.subheader("Export Data")
     csv = filtered_trips.to_csv(index=False)
     st.download_button(

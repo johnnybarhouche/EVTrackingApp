@@ -54,7 +54,7 @@ with tab1:
     col1, col2 = st.columns(2)
     
     with col1:
-        st.write("**Required columns:**")
+        st.write("**Standard CSV format columns:**")
         st.write("- date")
         st.write("- customer") 
         st.write("- from_location")
@@ -63,6 +63,17 @@ with tab1:
         st.write("- truck_type")
         st.write("- plate_number")
         st.write("- distance_km (optional)")
+        
+        st.write("**TMS Excel format:**")
+        st.write("✅ Automatically detected and mapped")
+        st.write("- Head Plate Number → plate_number")
+        st.write("- Customer → customer")
+        st.write("- Orgin → from_location") 
+        st.write("- Destination → to_location")
+        st.write("- Total Weight → tons_loaded")
+        st.write("- Departure Date → date")
+        st.write("- Trip KM → distance_km")
+        st.write("- Req. Truck Type → truck_type")
     
     with col2:
         # Create template file
@@ -97,7 +108,37 @@ with tab1:
             if uploaded_trips.name.endswith('.csv'):
                 df = pd.read_csv(uploaded_trips)
             else:
+                # Read Excel file and check if it's the TMS format
                 df = pd.read_excel(uploaded_trips)
+                
+                # Check if this is the TMS format (headers in second row)
+                if len(df) > 1 and 'Head Plate Number' in str(df.iloc[1].values):
+                    # Use second row as headers
+                    df.columns = df.iloc[1]
+                    df = df.drop([0, 1]).reset_index(drop=True)
+                    
+                    # Map TMS columns to our system columns
+                    column_mapping = {
+                        'Head Plate Number': 'plate_number',
+                        'Customer': 'customer',
+                        'Orgin': 'from_location',
+                        'Destination': 'to_location',
+                        'Total Weight': 'tons_loaded',
+                        'Departure Date': 'date',
+                        'Trip KM': 'distance_km',
+                        'Req. Truck Type': 'truck_type'
+                    }
+                    
+                    # Rename columns that exist
+                    for old_col, new_col in column_mapping.items():
+                        if old_col in df.columns:
+                            df = df.rename(columns={old_col: new_col})
+                    
+                    # Keep only the columns we need
+                    available_cols = [col for col in column_mapping.values() if col in df.columns]
+                    df = df[available_cols]
+                    
+                    st.info("✅ Detected TMS format - columns have been automatically mapped")
             
             st.write("**Preview of uploaded data:**")
             st.dataframe(df.head())
@@ -105,24 +146,39 @@ with tab1:
             # Validate required columns
             required_cols = ['date', 'customer', 'from_location', 'to_location', 
                            'tons_loaded', 'truck_type', 'plate_number']
+            available_required = [col for col in required_cols if col in df.columns]
             missing_cols = [col for col in required_cols if col not in df.columns]
             
             if missing_cols:
-                st.error(f"Missing required columns: {missing_cols}")
+                st.warning(f"Missing optional columns: {missing_cols}")
+                st.info("Import will proceed with available columns")
+            
+            # Only proceed if we have essential columns
+            essential_cols = ['customer', 'from_location', 'to_location', 'plate_number']
+            missing_essential = [col for col in essential_cols if col not in df.columns]
+            
+            if missing_essential:
+                st.error(f"Missing essential columns: {missing_essential}")
+                st.error("Cannot import data without these essential columns")
             else:
                 # Data validation
                 valid_rows = 0
                 total_rows = len(df)
                 
-                # Check for missing values in required fields
-                for col in required_cols:
-                    if df[col].isna().any():
+                # Check for missing values in available required fields
+                for col in available_required:
+                    if col in df.columns and df[col].isna().any():
                         st.warning(f"Column '{col}' has missing values")
                 
                 # Try to parse dates
                 try:
-                    df['date'] = pd.to_datetime(df['date'])
-                    valid_rows = len(df.dropna(subset=required_cols))
+                    if 'date' in df.columns:
+                        df['date'] = pd.to_datetime(df['date'])
+                    else:
+                        df['date'] = pd.Timestamp.now().date()
+                        st.warning("No date column found - using current date")
+                    
+                    valid_rows = len(df.dropna(subset=essential_cols))
                     
                     col1, col2, col3 = st.columns(3)
                     with col1:
@@ -134,11 +190,29 @@ with tab1:
                     
                     if st.button("Import Trip Data", type="primary"):
                         # Clean data before import
-                        clean_df = df.dropna(subset=required_cols).copy()
+                        clean_df = df.dropna(subset=essential_cols).copy()
                         
-                        # If distance_km is not provided, set to 0 (will be calculated later)
-                        if 'distance_km' not in clean_df.columns:
-                            clean_df['distance_km'] = 0
+                        # Add missing columns with default values
+                        required_defaults = {
+                            'date': pd.Timestamp.now().date(),
+                            'tons_loaded': 0.0,
+                            'truck_type': 'Electric',
+                            'distance_km': 0.0
+                        }
+                        
+                        for col, default_val in required_defaults.items():
+                            if col not in clean_df.columns:
+                                clean_df[col] = default_val
+                        
+                        # Ensure all required columns exist
+                        final_columns = ['date', 'customer', 'from_location', 'to_location', 
+                                       'tons_loaded', 'truck_type', 'plate_number', 'distance_km']
+                        for col in final_columns:
+                            if col not in clean_df.columns:
+                                clean_df[col] = required_defaults.get(col, '')
+                        
+                        # Select only the columns we need
+                        clean_df = clean_df[final_columns]
                         
                         st.session_state.trips_data = pd.concat([
                             st.session_state.trips_data,
