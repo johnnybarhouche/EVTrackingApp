@@ -98,22 +98,46 @@ st.markdown("""
         font-family: 'Roboto', sans-serif;
     }
     
-    /* Sidebar styling - DSV dark blue */
+    /* Sidebar styling - DSV dark blue with white text background */
     .css-1d391kg, .css-1oe6wy4, section[data-testid="stSidebar"] {
         background-color: #002664 !important;
+        width: 200px !important;
+        min-width: 200px !important;
+        max-width: 200px !important;
     }
     
-    /* Sidebar navigation text */
+    /* Sidebar navigation text with white background */
     .css-1d391kg .css-10trblm, 
     .css-1oe6wy4 .css-10trblm,
-    section[data-testid="stSidebar"] .css-10trblm {
-        color: white !important;
+    section[data-testid="stSidebar"] .css-10trblm,
+    section[data-testid="stSidebar"] p,
+    section[data-testid="stSidebar"] .element-container {
+        color: #002664 !important;
+        background-color: white !important;
+        padding: 8px !important;
+        border-radius: 4px !important;
+        margin: 4px 8px !important;
     }
     
     /* Navigation links in sidebar */
-    .css-1d391kg a, .css-1oe6wy4 a {
-        color: white !important;
+    .css-1d391kg a, .css-1oe6wy4 a,
+    section[data-testid="stSidebar"] a {
+        color: #002664 !important;
+        background-color: white !important;
         text-decoration: none !important;
+        padding: 8px 12px !important;
+        border-radius: 4px !important;
+        margin: 2px 8px !important;
+        display: block !important;
+    }
+    
+    /* Page navigation */
+    .css-1vq4p4l li a,
+    .css-12w0qpk li a {
+        color: #002664 !important;
+        background-color: white !important;
+        border-radius: 4px !important;
+        margin: 2px 8px !important;
     }
     
     /* Main content area */
@@ -315,18 +339,4 @@ Navigate using the sidebar menu to get started.
 
 # Sidebar information
 with st.sidebar:
-    st.header("Navigation")
-    st.markdown("Use the pages above to navigate through the application.")
-    
-    st.header("Quick Stats")
-    if not st.session_state.trips_data.empty:
-        total_trips = len(st.session_state.trips_data)
-        total_trucks = st.session_state.trips_data['plate_number'].nunique()
-        st.metric("Total Trips", total_trips)
-        st.metric("Active Trucks", total_trucks)
-    else:
-        st.info("Import trip data to see quick stats")
-    
-    st.header("System Status")
-    st.success("System Online")
-    st.info(f"Last Updated: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    st.markdown("Use the navigation menu to explore different sections.")")

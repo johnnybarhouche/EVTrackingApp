@@ -14,42 +14,19 @@ if st.session_state.trips_data.empty:
     st.warning("No trip data available. Please import data from the Data & Import section.")
     st.stop()
 
-# Sidebar filters
-with st.sidebar:
-    st.header("Filters")
-    
-    # Date filter
-    if not st.session_state.trips_data.empty and 'date' in st.session_state.trips_data.columns:
-        try:
-            st.session_state.trips_data['date'] = pd.to_datetime(st.session_state.trips_data['date'])
-            min_date = st.session_state.trips_data['date'].min().date()
-            max_date = st.session_state.trips_data['date'].max().date()
-            
-            date_range = st.date_input(
-                "Select Date Range",
-                value=(min_date, max_date),
-                min_value=min_date,
-                max_value=max_date
-            )
-        except:
-            st.error("Invalid date format in trip data")
-            date_range = None
-    else:
+# Set default filter values for compatibility
+date_range = None
+selected_truck = 'All'
+selected_client = 'All'
+
+if not st.session_state.trips_data.empty and 'date' in st.session_state.trips_data.columns:
+    try:
+        st.session_state.trips_data['date'] = pd.to_datetime(st.session_state.trips_data['date'])
+        min_date = st.session_state.trips_data['date'].min().date()
+        max_date = st.session_state.trips_data['date'].max().date()
+        date_range = (min_date, max_date)
+    except:
         date_range = None
-    
-    # Truck filter
-    if 'plate_number' in st.session_state.trips_data.columns:
-        available_trucks = ['All'] + list(st.session_state.trips_data['plate_number'].unique())
-        selected_truck = st.selectbox("Select Truck", available_trucks)
-    else:
-        selected_truck = 'All'
-    
-    # Client filter
-    if 'customer' in st.session_state.trips_data.columns:
-        available_clients = ['All'] + list(st.session_state.trips_data['customer'].unique())
-        selected_client = st.selectbox("Select Client", available_clients)
-    else:
-        selected_client = 'All'
 
 # Filter data based on selections
 filtered_data = st.session_state.trips_data.copy()

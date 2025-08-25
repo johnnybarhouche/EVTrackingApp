@@ -6,6 +6,16 @@ import numpy as np
 
 st.set_page_config(page_title="Routes", page_icon="🛣️", layout="wide")
 
+st.markdown("""
+<style>
+    h1 { color: #002664 !important; }
+    h2 { color: #002664 !important; }
+    h3 { color: #002664 !important; }
+    .stButton > button { background-color: #002664; color: white; }
+    [data-testid="metric-container"] { background: white; border: 1px solid #e0e0e0; border-radius: 8px; }
+</style>
+""", unsafe_allow_html=True)
+
 st.title("🛣️ Route Management")
 
 st.subheader("Manage Routes and Distances")
