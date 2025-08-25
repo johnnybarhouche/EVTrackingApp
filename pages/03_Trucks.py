@@ -34,6 +34,13 @@ st.title("🚚 Truck Fleet Management")
 if 'trips_data' not in st.session_state:
     st.session_state.trips_data = pd.DataFrame()
 
+if 'trucks_data' not in st.session_state:
+    st.session_state.trucks_data = pd.DataFrame(columns=[
+        'plate', 'make', 'kwh_per_km', 'total_kwh', 'total_km', 
+        'total_trips', 'total_tkm', 'kg_co2', 'kwh_per_tkm', 
+        'kg_co2_per_tkm', 'kg_co2_per_km'
+    ])
+
 # Display truck metrics if we have trip data
 if not st.session_state.trips_data.empty:
     truck_metrics = calculate_truck_metrics(
