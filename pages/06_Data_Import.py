@@ -215,12 +215,12 @@ with tab1:
                         clean_df['tons_loaded'] = pd.to_numeric(clean_df['tons_loaded'], errors='coerce').fillna(0.0)
                         clean_df['distance_km'] = pd.to_numeric(clean_df['distance_km'], errors='coerce').fillna(0.0)
                         
-                        # Convert string columns to string type
-                        clean_df['customer'] = clean_df['customer'].astype(str)
-                        clean_df['from_location'] = clean_df['from_location'].astype(str) 
-                        clean_df['to_location'] = clean_df['to_location'].astype(str)
-                        clean_df['truck_type'] = clean_df['truck_type'].astype(str)
-                        clean_df['plate_number'] = clean_df['plate_number'].astype(str)
+                        # Convert string columns to string type and ensure proper formatting
+                        clean_df['customer'] = clean_df['customer'].astype(str).replace('nan', '')
+                        clean_df['from_location'] = clean_df['from_location'].astype(str).replace('nan', '')
+                        clean_df['to_location'] = clean_df['to_location'].astype(str).replace('nan', '')
+                        clean_df['truck_type'] = clean_df['truck_type'].astype(str).replace('nan', 'Electric')
+                        clean_df['plate_number'] = clean_df['plate_number'].astype(str).replace('nan', '')
                         
                         # Select only the columns we need
                         clean_df = clean_df[final_columns]

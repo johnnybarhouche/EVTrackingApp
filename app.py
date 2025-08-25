@@ -86,8 +86,206 @@ if 'default_trucks_loaded' not in st.session_state:
     except:
         pass  # No sample data available
 
+# Custom CSS styling to match DSV interface
+st.markdown("""
+<style>
+    /* Import DSV styling */
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
+    
+    /* Main app background */
+    .stApp {
+        background-color: #f5f5f5;
+        font-family: 'Roboto', sans-serif;
+    }
+    
+    /* Sidebar styling - DSV dark blue */
+    .css-1d391kg, .css-1oe6wy4, section[data-testid="stSidebar"] {
+        background-color: #1f4e79 !important;
+    }
+    
+    /* Sidebar navigation text */
+    .css-1d391kg .css-10trblm, 
+    .css-1oe6wy4 .css-10trblm,
+    section[data-testid="stSidebar"] .css-10trblm {
+        color: white !important;
+    }
+    
+    /* Navigation links in sidebar */
+    .css-1d391kg a, .css-1oe6wy4 a {
+        color: white !important;
+        text-decoration: none !important;
+    }
+    
+    /* Main content area */
+    .main .block-container {
+        padding-top: 2rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        background-color: #f5f5f5;
+    }
+    
+    /* DSV-style header with logo area */
+    .main-header {
+        background-color: #1f4e79;
+        color: white;
+        padding: 1rem 2rem;
+        margin: -2rem -2rem 2rem -2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    /* Table headers - dark blue background */
+    .stDataFrame thead tr th,
+    .stDataFrame thead th,
+    thead tr th {
+        background-color: #1f4e79 !important;
+        color: white !important;
+        font-weight: 600 !important;
+        border: none !important;
+        padding: 12px !important;
+    }
+    
+    /* Table styling */
+    .stDataFrame table {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    /* Table body styling */
+    .stDataFrame tbody tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+    
+    .stDataFrame tbody tr:hover {
+        background-color: #e3f2fd;
+    }
+    
+    /* Metrics styling - card design */
+    [data-testid="metric-container"] {
+        background: white;
+        border: 1px solid #e0e0e0;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: box-shadow 0.3s ease;
+    }
+    
+    [data-testid="metric-container"]:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    /* Button styling - DSV blue */
+    .stButton > button {
+        background-color: #1f4e79;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        font-size: 14px;
+        transition: background-color 0.3s ease;
+    }
+    
+    .stButton > button:hover {
+        background-color: #163a5f;
+        color: white;
+        box-shadow: 0 2px 8px rgba(31, 78, 121, 0.3);
+    }
+    
+    /* Header styling */
+    h1 {
+        color: #1f4e79 !important;
+        font-weight: 600 !important;
+        font-size: 2.5rem !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    h2 {
+        color: #1f4e79 !important;
+        font-weight: 500 !important;
+        font-size: 1.8rem !important;
+        margin-top: 2rem !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    h3 {
+        color: #1f4e79 !important;
+        font-weight: 500 !important;
+        font-size: 1.4rem !important;
+        margin-top: 1.5rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+    
+    /* Navigation menu styling */
+    .css-1vq4p4l, .css-12w0qpk {
+        background-color: #1f4e79 !important;
+    }
+    
+    /* Selected page indicator */
+    .css-1vq4p4l .css-1rs6os {
+        background-color: rgba(255,255,255,0.2) !important;
+        border-radius: 4px;
+    }
+    
+    /* Expander styling */
+    .streamlit-expanderHeader {
+        background-color: #e8e8e8;
+        border-radius: 6px;
+        font-weight: 500;
+    }
+    
+    /* Success/info/warning messages */
+    .stAlert {
+        border-radius: 6px;
+        border-left: 4px solid #1f4e79;
+    }
+    
+    /* Form styling */
+    .stForm {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    /* Input fields */
+    .stTextInput > div > div > input,
+    .stNumberInput > div > div > input,
+    .stSelectbox > div > div > div {
+        border: 1px solid #d0d0d0;
+        border-radius: 4px;
+        padding: 0.5rem;
+    }
+    
+    /* Charts container */
+    .js-plotly-plot {
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# DSV-style header
+st.markdown("""
+<div class="main-header">
+    <div style="display: flex; align-items: center;">
+        <div style="background: white; color: #1f4e79; padding: 0.5rem 1rem; border-radius: 4px; font-weight: bold; margin-right: 1rem;">
+            DSV
+        </div>
+        <h1 style="color: white; margin: 0; font-size: 1.8rem;">EV Truck Performance Tracker</h1>
+    </div>
+    <div style="color: white; font-size: 0.9rem;">
+        Sustainability Dashboard
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
 # Main page content
-st.title("🚛 EV Truck Performance Tracker")
+st.markdown("## Dashboard Overview")
 
 st.markdown("""
 ### Welcome to the EV Truck Performance Tracking System
