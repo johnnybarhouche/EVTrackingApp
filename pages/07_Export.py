@@ -4,8 +4,15 @@ import io
 from datetime import datetime, timedelta
 import plotly.express as px
 from utils.calculations import calculate_emissions_report
+from utils.shared_components import apply_dsv_styling, render_dsv_header
 
 st.set_page_config(page_title="Export", page_icon="📤", layout="wide")
+
+# Apply consistent DSV styling
+apply_dsv_styling()
+
+# Render DSV header
+render_dsv_header()
 
 st.markdown("""
 <style>

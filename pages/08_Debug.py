@@ -2,8 +2,15 @@ import streamlit as st
 import pandas as pd
 import json
 from datetime import datetime
+from utils.shared_components import apply_dsv_styling, render_dsv_header
 
 st.set_page_config(page_title="Debug", page_icon="🔧", layout="wide")
+
+# Apply consistent DSV styling
+apply_dsv_styling()
+
+# Render DSV header
+render_dsv_header()
 
 st.markdown("""
 <style>

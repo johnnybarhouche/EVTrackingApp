@@ -3,8 +3,15 @@ import pandas as pd
 import plotly.express as px
 from utils.google_maps import calculate_distance_google_maps
 import numpy as np
+from utils.shared_components import apply_dsv_styling, render_dsv_header
 
 st.set_page_config(page_title="Routes", page_icon="🛣️", layout="wide")
+
+# Apply consistent DSV styling
+apply_dsv_styling()
+
+# Render DSV header
+render_dsv_header()
 
 st.markdown("""
 <style>

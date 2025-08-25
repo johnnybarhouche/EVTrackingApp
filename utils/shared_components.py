@@ -15,18 +15,15 @@ def render_dsv_header():
     logo_base64 = get_base64_of_image("assets/dsv_logo.png")
     
     if logo_base64:
-        logo_html = f'<img src="data:image/png;base64,{logo_base64}" style="height: 40px; margin-right: 15px;">'
+        logo_html = f'<img src="data:image/png;base64,{logo_base64}" style="height: 32px; margin-right: 15px;">'
     else:
-        logo_html = '<div style="background: white; color: #002664; padding: 0.5rem 1rem; border-radius: 4px; font-weight: bold; margin-right: 1rem; font-size: 1.2rem;">DSV</div>'
+        logo_html = '<div style="background: white; color: #002664; padding: 0.3rem 0.8rem; border-radius: 4px; font-weight: bold; margin-right: 1rem; font-size: 1rem;">DSV</div>'
     
     header_html = f"""
     <div class="dsv-header">
         <div style="display: flex; align-items: center;">
             {logo_html}
-            <h1 style="color: white; margin: 0; font-size: 1.8rem; font-weight: 600;">EV Truck Performance Tracker</h1>
-        </div>
-        <div style="color: white; font-size: 0.9rem; font-weight: 300;">
-            Sustainability Dashboard
+            <h1 style="color: white; margin: 0; font-size: 1.4rem; font-weight: 600;">EV Truck Performance Tracker</h1>
         </div>
     </div>
     """
@@ -50,15 +47,17 @@ def apply_dsv_styling():
         .dsv-header {
             background-color: #002664;
             color: white;
-            padding: 1rem 2rem;
-            margin: -2rem -2rem 2rem -2rem;
+            padding: 0.75rem 2rem;
+            margin: -2rem -2rem 1.5rem -2rem;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-start;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
         }
         
         /* Sidebar styling */

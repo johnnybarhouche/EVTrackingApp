@@ -3,8 +3,15 @@ import pandas as pd
 import folium
 from streamlit_folium import st_folium
 import re
+from utils.shared_components import apply_dsv_styling, render_dsv_header
 
 st.set_page_config(page_title="Locations", page_icon="📍", layout="wide")
+
+# Apply consistent DSV styling
+apply_dsv_styling()
+
+# Render DSV header
+render_dsv_header()
 
 st.markdown("""
 <style>
