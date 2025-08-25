@@ -326,20 +326,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# DSV-style header
-st.markdown("""
-<div class="main-header">
-    <div style="display: flex; align-items: center;">
-        <div style="background: white; color: #002664; padding: 0.5rem 1rem; border-radius: 4px; font-weight: bold; margin-right: 1rem;">
-            DSV
-        </div>
-        <h1 style="color: white; margin: 0; font-size: 1.8rem;">EV Truck Performance Tracker</h1>
-    </div>
-    <div style="color: white; font-size: 0.9rem;">
-        Sustainability Dashboard
-    </div>
-</div>
-""", unsafe_allow_html=True)
+
 
 # Main page content
 st.markdown("## Dashboard Overview")
