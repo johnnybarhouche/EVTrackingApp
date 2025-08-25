@@ -80,14 +80,18 @@ with col2:
 
 with col3:
     if not filtered_data.empty and 'tons_loaded' in filtered_data.columns:
-        total_tons = filtered_data['tons_loaded'].sum()
+        # Convert to numeric and handle string values
+        tons_numeric = pd.to_numeric(filtered_data['tons_loaded'], errors='coerce').fillna(0)
+        total_tons = tons_numeric.sum()
         st.metric("Total Tons Transported", f"{total_tons:,.0f} tons")
     else:
         st.metric("Total Tons Transported", "0 tons")
 
 with col4:
-    if not filtered_data.empty:
-        avg_load = filtered_data['tons_loaded'].mean() if 'tons_loaded' in filtered_data.columns else 0
+    if not filtered_data.empty and 'tons_loaded' in filtered_data.columns:
+        # Convert to numeric for average calculation
+        tons_numeric = pd.to_numeric(filtered_data['tons_loaded'], errors='coerce').fillna(0)
+        avg_load = tons_numeric.mean()
         st.metric("Average Load", f"{avg_load:.1f} tons")
     else:
         st.metric("Average Load", "0 tons")

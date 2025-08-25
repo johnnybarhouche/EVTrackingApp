@@ -147,36 +147,12 @@ if not st.session_state.trips_data.empty:
 else:
     st.warning("No trip data available. Please import trip data from the Data & Import section.")
 
-# Add new truck manually
-st.subheader("Add New Truck")
-with st.expander("Manual Truck Entry"):
-    with st.form("add_truck"):
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            plate = st.text_input("Plate Number")
-            make = st.text_input("Make/Model")
-        
-        with col2:
-            kwh_per_km = st.number_input("Energy Efficiency (kWh/km)", min_value=0.0, step=0.01)
-        
-        submitted = st.form_submit_button("Add Truck")
-        
-        if submitted and plate:
-            # Add to energy consumption data
-            new_energy_entry = pd.DataFrame({
-                'plate_number': [plate],
-                'period': [pd.Timestamp.now().strftime('%Y-%m')],
-                'kwh_per_km': [kwh_per_km]
-            })
-            
-            st.session_state.energy_consumption = pd.concat([
-                st.session_state.energy_consumption, 
-                new_energy_entry
-            ], ignore_index=True)
-            
-            st.success(f"Truck {plate} added successfully!")
-            st.rerun()
+# Fleet Master Data
+st.subheader("Fleet Master Data")
+if 'truck_master_data' in st.session_state:
+    st.dataframe(st.session_state.truck_master_data, use_container_width=True)
+else:
+    st.info("No truck master data available")
 
 # Export truck data
 if not st.session_state.trucks_data.empty:

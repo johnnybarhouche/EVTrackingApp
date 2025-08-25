@@ -76,7 +76,9 @@ else:
     
     with col3:
         if 'tons_loaded' in filtered_trips.columns:
-            total_cargo = filtered_trips['tons_loaded'].sum()
+            # Convert to numeric and handle any string values
+            tons_numeric = pd.to_numeric(filtered_trips['tons_loaded'], errors='coerce').fillna(0)
+            total_cargo = tons_numeric.sum()
             st.metric("Total Cargo", f"{total_cargo:,.0f} tons")
         else:
             st.metric("Total Cargo", "N/A")
@@ -119,49 +121,65 @@ else:
         else:
             st.info("No date data available")
 
-# Manual trip entry
-st.subheader("Add New Trip")
-with st.expander("Manual Trip Entry"):
-    with st.form("add_trip"):
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            trip_date = st.date_input("Trip Date", datetime.now().date())
-            customer = st.text_input("Customer")
-            from_location = st.text_input("From Location")
-            to_location = st.text_input("To Location")
-        
-        with col2:
-            tons_loaded = st.number_input("Tons Loaded", min_value=0.0, step=0.1)
-            truck_type = st.text_input("Truck Type")
-            plate_number = st.text_input("Plate Number")
-            distance_km = st.number_input("Distance (km)", min_value=0.0, step=0.1)
-        
-        submitted = st.form_submit_button("Add Trip")
-        
-        if submitted:
-            new_trip = pd.DataFrame({
-                'date': [trip_date],
-                'customer': [customer],
-                'from_location': [from_location],
-                'to_location': [to_location],
-                'tons_loaded': [tons_loaded],
-                'truck_type': [truck_type],
-                'plate_number': [plate_number],
-                'distance_km': [distance_km]
-            })
-            
-            st.session_state.trips_data = pd.concat([st.session_state.trips_data, new_trip], ignore_index=True)
-            st.success("Trip added successfully!")
-            st.rerun()
+# Date range filter
+st.subheader("Filter by Date Range")
+start_date = None
+end_date = None
 
-# Export filtered data
-if not st.session_state.trips_data.empty and 'filtered_trips' in locals() and not filtered_trips.empty:
-    st.subheader("Export Data")
-    csv = filtered_trips.to_csv(index=False)
-    st.download_button(
-        label="Download filtered trips as CSV",
-        data=csv,
-        file_name=f"trips_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
-        mime="text/csv"
-    )
+if not st.session_state.trips_data.empty and 'date' in st.session_state.trips_data.columns:
+    try:
+        st.session_state.trips_data['date'] = pd.to_datetime(st.session_state.trips_data['date'])
+        min_date = st.session_state.trips_data['date'].min().date()
+        max_date = st.session_state.trips_data['date'].max().date()
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            start_date = st.date_input(
+                "From Date",
+                value=min_date,
+                min_value=min_date,
+                max_value=max_date
+            )
+        with col2:
+            end_date = st.date_input(
+                "To Date", 
+                value=max_date,
+                min_value=min_date,
+                max_value=max_date
+            )
+    except:
+        st.warning("Date filtering not available - please check date format in your data")
+
+# Filter and display trips data
+if not st.session_state.trips_data.empty:
+    filtered_trips = st.session_state.trips_data.copy()
+    
+    # Apply date filter if available
+    if start_date and end_date and 'date' in filtered_trips.columns:
+        try:
+            filtered_trips['date'] = pd.to_datetime(filtered_trips['date'])
+            filtered_trips = filtered_trips[
+                (filtered_trips['date'].dt.date >= start_date) & 
+                (filtered_trips['date'].dt.date <= end_date)
+            ]
+        except:
+            pass
+    
+    # Display filtered data
+    st.subheader("Trip Records")
+    if not filtered_trips.empty:
+        st.dataframe(filtered_trips, use_container_width=True)
+        
+        # Export filtered data
+        st.subheader("Export Data")
+        csv = filtered_trips.to_csv(index=False)
+        st.download_button(
+            label="Download filtered trips as CSV",
+            data=csv,
+            file_name=f"trips_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+            mime="text/csv"
+        )
+    else:
+        st.info("No trips match the selected date range.")
+else:
+    st.info("No trip data available. Please import data in the Data Import section.")

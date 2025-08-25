@@ -44,6 +44,48 @@ if 'energy_consumption' not in st.session_state:
 if 'emission_factor' not in st.session_state:
     st.session_state.emission_factor = 0.5  # Default KgCO2/kWh
 
+# Initialize with default truck data
+if 'default_trucks_loaded' not in st.session_state:
+    default_trucks = pd.DataFrame({
+        'plate_number': ['45211', '73619', '72738', '27681', '29179', '29150', '29176', '29142', '45282'],
+        'period': ['2024-01'] * 9,
+        'kwh_per_km': [1.2, 1.1, 1.3, 1.15, 1.08, 1.25, 1.2, 1.1, 1.4]
+    })
+    
+    # Initialize truck master data
+    truck_master = pd.DataFrame({
+        'serial': ['9/45211 DSV HDT EV490', '7/73619 DSV HDT EV490', '17/72738 DSV HDT EV490', 
+                  '14/27681 DSV HDT EV490', '11/29179 DSV HDT EV490', '11/29150 DSV HDT EV490',
+                  '11/29176 DSV HDT EV490', '11/29142 DSV HDT EV490', '19/45282 DSV LDT ST4200'],
+        'plate': ['45211', '73619', '72738', '27681', '29179', '29150', '29176', '29142', '45282'],
+        'brand': ['SANY'] * 9,
+        'vin': ['LFCAH96W1P3002623', 'LFCAH96W6P3004111', 'LFCAH96WXP3004113', 
+               'LFCAH96W8P3004109', 'LFCAH96W8P3004112', 'LFCAH96W3P3004115',
+               'LFCAH96W4P3004110', 'LFCAH96W7P3003999', 'LFXDB22P4P3080364'],
+        'year': [2024] * 9,
+        'model': ['Truck/Heavy Duty Truck/EV'] * 8 + ['Truck/Light Duty Truck/EV'],
+        'id': ['51230421020046', '51230421020038', '51230725020010', '51230725020058',
+               '51230725020050', '51230725020014', '51230421020022', '51230725020078', '51230725020100']
+    })
+    
+    if st.session_state.energy_consumption.empty:
+        st.session_state.energy_consumption = default_trucks
+    
+    st.session_state.truck_master_data = truck_master
+    st.session_state.default_trucks_loaded = True
+    
+    # Load sample trip data if available
+    try:
+        if st.session_state.trips_data.empty:
+            sample_trips = pd.read_csv('data/sample_trips.csv')
+            sample_trips['date'] = pd.to_datetime(sample_trips['date'])
+            # Ensure numeric types
+            sample_trips['tons_loaded'] = pd.to_numeric(sample_trips['tons_loaded'], errors='coerce').fillna(0.0)
+            sample_trips['distance_km'] = pd.to_numeric(sample_trips['distance_km'], errors='coerce').fillna(0.0)
+            st.session_state.trips_data = sample_trips
+    except:
+        pass  # No sample data available
+
 # Main page content
 st.title("🚛 EV Truck Performance Tracker")
 

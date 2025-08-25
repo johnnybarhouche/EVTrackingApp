@@ -204,12 +204,23 @@ with tab1:
                             if col not in clean_df.columns:
                                 clean_df[col] = default_val
                         
-                        # Ensure all required columns exist
+                        # Ensure all required columns exist and fix data types
                         final_columns = ['date', 'customer', 'from_location', 'to_location', 
                                        'tons_loaded', 'truck_type', 'plate_number', 'distance_km']
                         for col in final_columns:
                             if col not in clean_df.columns:
                                 clean_df[col] = required_defaults.get(col, '')
+                        
+                        # Convert numeric columns to proper types
+                        clean_df['tons_loaded'] = pd.to_numeric(clean_df['tons_loaded'], errors='coerce').fillna(0.0)
+                        clean_df['distance_km'] = pd.to_numeric(clean_df['distance_km'], errors='coerce').fillna(0.0)
+                        
+                        # Convert string columns to string type
+                        clean_df['customer'] = clean_df['customer'].astype(str)
+                        clean_df['from_location'] = clean_df['from_location'].astype(str) 
+                        clean_df['to_location'] = clean_df['to_location'].astype(str)
+                        clean_df['truck_type'] = clean_df['truck_type'].astype(str)
+                        clean_df['plate_number'] = clean_df['plate_number'].astype(str)
                         
                         # Select only the columns we need
                         clean_df = clean_df[final_columns]

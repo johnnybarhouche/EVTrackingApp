@@ -25,10 +25,16 @@ def calculate_truck_metrics(trips_data: pd.DataFrame, energy_data: pd.DataFrame,
         'tons_loaded': 'sum',  # Total cargo transported
     }).rename(columns={'date': 'total_trips'})
     
-    # Calculate ton-kilometers (freight work done)
+    # Calculate ton-kilometers (freight work done) - handle data type conversion
+    def calculate_tkm(group):
+        # Convert to numeric, handling any string values
+        distance = pd.to_numeric(group['distance_km'], errors='coerce').fillna(0)
+        tons = pd.to_numeric(group['tons_loaded'], errors='coerce').fillna(0)
+        return (distance * tons).sum()
+    
     truck_stats['total_tkm'] = (
         trips_data.groupby('plate_number')
-        .apply(lambda x: (x['distance_km'] * x['tons_loaded']).sum(), include_groups=False)
+        .apply(calculate_tkm, include_groups=False)
     )
     
     # Add energy efficiency data if available
@@ -165,11 +171,16 @@ def calculate_customer_emissions(trips_data: pd.DataFrame, energy_data: pd.DataF
             'emissions_per_km': 0
         }
     
-    # Calculate basic metrics
+    # Calculate basic metrics - handle data types
     total_trips = len(customer_trips)
-    total_distance = customer_trips['distance_km'].sum()
-    total_cargo = customer_trips['tons_loaded'].sum()
-    total_tkm = (customer_trips['distance_km'] * customer_trips['tons_loaded']).sum()
+    
+    # Convert to numeric for calculations
+    distance_numeric = pd.to_numeric(customer_trips['distance_km'], errors='coerce').fillna(0)
+    tons_numeric = pd.to_numeric(customer_trips['tons_loaded'], errors='coerce').fillna(0)
+    
+    total_distance = distance_numeric.sum()
+    total_cargo = tons_numeric.sum()
+    total_tkm = (distance_numeric * tons_numeric).sum()
     
     # Calculate emissions
     total_emissions = 0
@@ -182,7 +193,11 @@ def calculate_customer_emissions(trips_data: pd.DataFrame, energy_data: pd.DataF
             
             if not truck_efficiency_data.empty:
                 efficiency = truck_efficiency_data['kwh_per_km'].mean()
-                trip_kwh = trip['distance_km'] * efficiency
+                # Convert to numeric for calculation
+                distance_val = pd.to_numeric(trip['distance_km'], errors='coerce')
+                if pd.isna(distance_val):
+                    distance_val = 0
+                trip_kwh = distance_val * efficiency
                 trip_co2 = trip_kwh * emission_factor
                 total_emissions += trip_co2
     

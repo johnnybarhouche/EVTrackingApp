@@ -1,0 +1,11 @@
+date,customer,from_location,to_location,tons_loaded,truck_type,plate_number,distance_km
+2024-01-15,ABC Logistics,Warehouse Central,Industrial Zone A,15.5,Electric,45211,45.2
+2024-01-15,Green Transport Ltd,Distribution Center,Retail Hub B,8.3,Electric,73619,28.7
+2024-01-16,Eco Freight Co,Manufacturing Plant,Customer Depot C,22.1,Electric,72738,67.4
+2024-01-16,Sustainable Cargo,Warehouse Central,Port Terminal,18.9,Electric,27681,52.3
+2024-01-17,ABC Logistics,Industrial Zone A,Distribution Center,12.7,Electric,29179,38.5
+2024-01-17,Green Transport Ltd,Retail Hub B,Manufacturing Plant,9.4,Electric,29150,41.2
+2024-01-18,Fast Delivery Inc,Port Terminal,Warehouse Central,25.6,Electric,29176,48.7
+2024-01-18,Eco Freight Co,Customer Depot C,Industrial Zone A,14.3,Electric,29142,35.8
+2024-01-19,Express Cargo,Distribution Center,Port Terminal,19.2,Electric,45282,62.1
+2024-01-19,ABC Logistics,Manufacturing Plant,Retail Hub B,11.8,Electric,45211,29.6
