@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 import os
+from utils.shared_components import apply_dsv_styling, render_dsv_header
 
 # Page configuration
 st.set_page_config(
@@ -85,6 +86,12 @@ if 'default_trucks_loaded' not in st.session_state:
             st.session_state.trips_data = sample_trips
     except:
         pass  # No sample data available
+
+# Apply consistent DSV styling
+apply_dsv_styling()
+
+# Render DSV header
+render_dsv_header()
 
 # Custom CSS styling to match DSV interface
 st.markdown("""

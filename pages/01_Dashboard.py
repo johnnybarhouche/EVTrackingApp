@@ -4,8 +4,15 @@ import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
 import numpy as np
+from utils.shared_components import apply_dsv_styling, render_dsv_header
 
 st.set_page_config(page_title="Dashboard", page_icon="📊", layout="wide")
+
+# Apply consistent DSV styling
+apply_dsv_styling()
+
+# Render DSV header
+render_dsv_header()
 
 st.title("📊 Dashboard")
 

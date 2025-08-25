@@ -3,30 +3,15 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from utils.calculations import calculate_truck_metrics
+from utils.shared_components import apply_dsv_styling, render_dsv_header
 
 st.set_page_config(page_title="Trucks", page_icon="🚚", layout="wide")
 
-st.markdown("""
-<style>
-    h1 { color: #002664 !important; }
-    h2 { color: #002664 !important; }
-    h3 { color: #002664 !important; }
-    .stButton > button { background-color: #002664; color: white; }
-    [data-testid="metric-container"] { background: white; border: 1px solid #e0e0e0; border-radius: 8px; }
+# Apply consistent DSV styling
+apply_dsv_styling()
 
-    /* Sidebar styling */
-    [data-testid="stSidebar"] {
-        background-color: white !important;
-    }
-    .st-emotion-cache-16txt0d {
-        background-color: white !important;
-    }
-    .st-emotion-cache-18.e1777b8u2 {
-        background-color: #002664 !important;
-        color: white !important;
-    }
-</style>
-""", unsafe_allow_html=True)
+# Render DSV header
+render_dsv_header()
 
 st.title("🚚 Truck Fleet Management")
 
