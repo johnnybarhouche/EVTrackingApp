@@ -15,7 +15,7 @@ st.set_page_config(page_title="Trucks", page_icon="🚚", layout="wide", initial
 setup_left_pane()
 inject_top_header("Trucks Management")
 
-# Remove all empty sections and gaps above content
+# Completely remove all spacing between header and content
 st.markdown("""
 <style>
 /* Completely remove default padding and margins */
@@ -23,6 +23,7 @@ section.main > div.block-container {
   padding-top: 0 !important; 
   padding-left: 0 !important; 
   margin-top: 0 !important;
+  transform: translateY(-16px); /* Pull content up closer to header */
 }
 
 /* Kill ALL vertical blocks that might create spacing */
@@ -30,6 +31,8 @@ section.main > div.block-container > div[data-testid="stVerticalBlock"] {
   margin-top: 0 !important;
   padding-top: 0 !important;
   min-height: 0 !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
 }
 
 /* Hide empty blocks completely */
@@ -38,7 +41,8 @@ section.main > div.block-container > div[data-testid="stVerticalBlock"] > div:on
   display: none !important;
 }
 
-/* Remove margins from all elements that could create gaps */
+/* Remove margins from ALL elements that could create gaps */
+section.main div.block-container *,
 section.main div.block-container h1,
 section.main div.block-container h2,
 section.main div.block-container h3,
@@ -46,17 +50,27 @@ section.main div.block-container div,
 section.main div.block-container p { 
   margin-top: 0 !important; 
   padding-top: 0 !important;
+  margin-bottom: 0 !important;
 }
 
-/* Ensure columns don't add spacing */
+/* Ensure columns don't add ANY spacing */
 div[data-testid="column"] {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 0 !important;
 }
 
-/* Force negative pull-up if needed */
-section.main > div.block-container { 
-  transform: translateY(-8px); 
+/* Remove any spacing from column containers */
+div[data-testid="column"] > div {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Make the title sit flush */
+.block-container h3 {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.2 !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -155,14 +169,18 @@ if "truck_master_data" not in st.session_state:
 
 
 
-# Title + compact refresh (sits directly under header, aligned left)
-left, right = st.columns([10, 2], gap="small")
-with left:
-    st.markdown('<h3 style="margin:0;">EV HD Trucks Master Data</h3>', unsafe_allow_html=True)
-with right:
-    if st.button("↻", key="refresh", help="Refresh data", use_container_width=True):
-        st.cache_data.clear()
-        st.session_state.truck_master_data = load_mapped_ev_trucks_df()
+# Title and refresh in a single line without columns to eliminate any spacing
+title_html = """
+<div style="display: flex; justify-content: space-between; align-items: center; margin: 0; padding: 0;">
+  <h3 style="margin: 0; padding: 0; color: #002664; font-size: 1.4rem; font-weight: 500;">EV HD Trucks Master Data</h3>
+</div>
+"""
+st.markdown(title_html, unsafe_allow_html=True)
+
+# Refresh button on a separate line to avoid layout issues
+if st.button("↻ Refresh", key="refresh", help="Refresh data"):
+    st.cache_data.clear()
+    st.session_state.truck_master_data = load_mapped_ev_trucks_df()
 
 
 
