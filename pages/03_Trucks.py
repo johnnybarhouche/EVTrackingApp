@@ -23,7 +23,7 @@ section.main > div.block-container {
   padding-top: 0 !important; 
   padding-left: 0 !important; 
   margin-top: 0 !important;
-  transform: translateY(-16px); /* Pull content up closer to header */
+  transform: translateY(-40px); /* Pull content much closer to header */
 }
 
 /* Kill ALL vertical blocks that might create spacing */
@@ -66,11 +66,18 @@ div[data-testid="column"] > div {
   padding: 0 !important;
 }
 
-/* Make the title sit flush */
+/* Make the title sit flush under header */
 .block-container h3 {
   margin: 0 !important;
   padding: 0 !important;
   line-height: 1.2 !important;
+  transform: translateY(-10px); /* Additional pull-up for title */
+}
+
+/* Ensure the title HTML div also has no spacing */
+div[style*="display: flex"] h3 {
+  margin: 0 !important;
+  padding: 0 !important;
 }
 </style>
 """, unsafe_allow_html=True)
