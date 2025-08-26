@@ -15,27 +15,49 @@ st.set_page_config(page_title="Trucks", page_icon="🚚", layout="wide", initial
 setup_left_pane()
 inject_top_header("Trucks Management")
 
-# Flush content directly under the header & align left
+# Remove all empty sections and gaps above content
 st.markdown("""
 <style>
-/* remove default padding under the main header */
-section.main > div.block-container { padding-top: 0 !important; padding-left: 0 !important; }
+/* Completely remove default padding and margins */
+section.main > div.block-container { 
+  padding-top: 0 !important; 
+  padding-left: 0 !important; 
+  margin-top: 0 !important;
+}
 
-/* kill the FIRST spacer block Streamlit inserts under the header */
-section.main > div.block-container > div[data-testid="stVerticalBlock"]:first-child {
+/* Kill ALL vertical blocks that might create spacing */
+section.main > div.block-container > div[data-testid="stVerticalBlock"] {
   margin-top: 0 !important;
   padding-top: 0 !important;
   min-height: 0 !important;
 }
-/* if that block only contains an empty child, hide it */
-section.main > div.block-container > div[data-testid="stVerticalBlock"]:first-child > div:only-child:empty {
+
+/* Hide empty blocks completely */
+section.main > div.block-container > div[data-testid="stVerticalBlock"]:empty,
+section.main > div.block-container > div[data-testid="stVerticalBlock"] > div:only-child:empty {
   display: none !important;
 }
 
-/* ensure headings don’t reintroduce top gaps */
+/* Remove margins from all elements that could create gaps */
 section.main div.block-container h1,
 section.main div.block-container h2,
-section.main div.block-container h3 { margin-top: 0 !important; }
+section.main div.block-container h3,
+section.main div.block-container div,
+section.main div.block-container p { 
+  margin-top: 0 !important; 
+  padding-top: 0 !important;
+}
+
+/* Ensure columns don't add spacing */
+div[data-testid="column"] {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Force negative pull-up if needed */
+section.main > div.block-container { 
+  transform: translateY(-8px); 
+}
 </style>
 """, unsafe_allow_html=True)
 
