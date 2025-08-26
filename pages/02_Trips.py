@@ -1,18 +1,16 @@
 import streamlit as st
+from utils.left_pane import setup_left_pane
+from utils.header import inject_top_header
+
+# from utils.shared_components import apply_dsv_styling  # optional: only if needed
 import pandas as pd
 from datetime import datetime
-from utils.shared_components import apply_dsv_styling, render_dsv_header
 import plotly.express as px
 
 st.set_page_config(page_title="Trips", page_icon="🚛", layout="wide")
 
-# Apply consistent DSV styling
-apply_dsv_styling()
-
-# Render DSV header
-render_dsv_header()
-
-st.title("🚛 Trips Management")
+setup_left_pane()                      # draws the blue strip; ideally sets --dsv-left-pane-width
+inject_top_header("Trips Management")  # puts the title into the real top header
 
 # Initialize session state if needed
 if 'trips_data' not in st.session_state:
