@@ -1,0 +1,54 @@
+# -----------------------------
+# HTML table (auto-fit; no inner scrolling)
+# -----------------------------
+def render_trucks_table_autofit(df: pd.DataFrame):
+    base_cols = ["Truck ID", "Plate Number", "Make", "Model", "Battery, kWh"]
+    df = df[base_cols].copy().reset_index(drop=True)
+
+    # Add Ref. column (1..n) at the start
+    df.insert(0, "Ref.", range(1, len(df) + 1))
+    cols = ["Ref."] + base_cols
+
+    thead = "".join(f"<th>{_html.escape(c)}</th>" for c in cols)
+    tbody = "\n".join(
+        "<tr>" + "".join(f"<td>{_html.escape(str(v))}</td>" for v in row) + "</tr>"
+        for row in df[cols].values.tolist()
+    )
+
+    html = f"""
+    <style>
+      .dsv-table {{
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        table-layout: auto;                 /* auto-fit by content */
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      }}
+      .dsv-table th, .dsv-table td {{
+        border: 1px solid #E5E7EB;
+        padding: 8px 12px;
+        text-align: center;
+        vertical-align: middle;
+      }}
+      .dsv-table thead th {{
+        background: #BCDBEC;               /* header bg */
+        color: #002664;                    /* header font */
+        font-weight: 700;                  /* bold */
+        white-space: nowrap;
+      }}
+      .dsv-table tbody td {{
+        background: #FFFFFF;               /* body cells white */
+        white-space: normal;               /* allow wrapping for auto-height */
+        word-break: break-word;
+        line-height: 1.3;
+      }}
+    </style>
+    <table class="dsv-table">
+      <thead><tr>{thead}</tr></thead>
+      <tbody>{tbody}</tbody>
+    </table>
+    """
+
+    # Height sized to content; cap to avoid runaway height
+    approx_height = min(120 + 36 * max(len(df), 1), 1200)
+    html_comp(html, height=approx_height, scrolling=False)
