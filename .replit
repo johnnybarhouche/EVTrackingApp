@@ -1,9 +1,9 @@
-modules = ["python-3.11"]
+modules = ["nodejs-20", "python-3.11"]
 run = "Run"
 
 [nix]
 channel = "stable-25_05"
-packages = ["glibcLocales"]
+packages = ["glibcLocales", "u-root-cmds"]
 
 [deployment]
 deploymentTarget = "autoscale"
